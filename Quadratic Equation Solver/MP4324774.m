@@ -1,6 +1,7 @@
 %The code below was written by Benjamin Langford
+% The function of this script is to calculate and display the roots of a
+% quadratic using the quadratic formula,
 
-%We first start by using the commands clc and clear
 clc;    %clc removes any previous commands or messages from the command window.
 % It is good practice to do this so that any new error messages aren't
 % confused with previous ones and to see if the program is outputting
@@ -10,12 +11,11 @@ clear; %This command clears any previously initialised variables from memory
 %  persist between scripts, thus if I made any changes after making a large
 %  matrix, the matrix would still be in memory and could cause a memory
 %  overflow.
+close all; % This command closes all figures that have graphs on them.
+hold on; % This command makes it so that everything plotted is persistent, meaning 
+% that when plot() is called more than once, it doesn't overwrite the previous plot
 
-% TO DO: Take input
-% declare and validate variables
-% allow user to input, a,b,c as well as domain and range for graph
-% Program part to calculate roots, allowing for: no roots, one root, two
-% roots
+% TO DO: 
 % Make it so intersection points are displayed
 % IF TIME ALLOWS:
 % Upgrade it so it finds the intersection between a quadratic and a line
@@ -26,7 +26,7 @@ clear; %This command clears any previously initialised variables from memory
 % DEADLINE: NOVEMBER 7TH
 %
 
-disp('Please enter a, b, and c for a quadratic from the form ax^2 + bx + c');
+disp('Please enter a, b, and c for a quadratic from the form ax^2 + bx + c, as well as the bounds for the graph');
 %This command prints to the command window only. I do this to prompt the
 %user for input.
 
@@ -69,7 +69,36 @@ while ct == 0
     end
 end
 
+lt = 0;
+while lt == 0
+    L = input('Lower Bound of graph (default -5): ', 's');
+    if isnan(str2double(L))
+        L = -5;
+        lt = 1;
+    else
+        lt = 1;
+        L = str2double(L);
+    end
+end
+
+rt = 0;
+while rt == 0
+    R = input('Upper bound of graph (default 5): ', 's');
+    if isnan(str2double(R))
+        R = 5;
+        rt = 1;
+    else
+        rt = 1;
+        R = str2double(R);
+    end
+end
 fprintf('You have entered %d, %d, and %d \n', a,b,c);
+
+x = L:0.01:R;
+y = a*x.^2 + b.*x + c;
+
+plot(x,y);
+
 % I then check the discriminant of the equation to check the number of
 % roots the equation will have. This means that I can create a function for
 % each case.
@@ -80,6 +109,9 @@ if discriminant > 0 %If the discriminant is greater than 0, the the equation wil
 %     pass the values for a, b and the discriminant to it. I don't need to
 %     pass c since it was already used in the calculation for the
 %     discriminant
+
+    plot(x1,0, 'p');
+    plot(x2,0, 'p');
     fprintf('x1 = %.3f, x2 = %.3f \n', x1, x2); % I then print out 
 %     the values for the roots
 elseif discriminant == 0 % If the discriminant equals 0, then there will be one root.
