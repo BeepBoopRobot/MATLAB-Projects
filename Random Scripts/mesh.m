@@ -8,3 +8,4 @@ id = [1,0;0,1];
 disp(a*b);
 disp(a*id);
 disp(det(a));
+disp(inv(a) * a);
