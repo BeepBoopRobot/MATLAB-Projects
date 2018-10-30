@@ -12,8 +12,6 @@ clear; %This command clears any previously initialised variables from memory
 %  matrix, the matrix would still be in memory and could cause a memory
 %  overflow.
 close all; % This command closes all figures that have graphs on them.
-hold on; % This command makes it so that everything plotted is persistent, meaning 
-% that when plot() is called more than once, it doesn't overwrite the previous plot
 
 % TO DO: 
 % Make it so intersection points are displayed
@@ -94,10 +92,20 @@ while rt == 0
 end
 fprintf('You have entered %d, %d, and %d \n', a,b,c);
 
+hold on; % This command tells matlab not to overwrite the previous graph when I plot a new one
+% (for some reason matlab counts plotting individual points as separate
+% graphs worth clearing the graph for
+grid on; % This makes the grid visible on the graph.
+
+title(sprintf('Graph of %.0fx^2+%.0fx+%.0f',a,b,c)); 
+% This command 
+
 x = L:0.01:R;
 y = a*x.^2 + b.*x + c;
 
-plot(x,y);
+plot(x,y,'-.');
+plot(x,0,'k');
+plot(0,y,'k');
 
 % I then check the discriminant of the equation to check the number of
 % roots the equation will have. This means that I can create a function for
@@ -108,14 +116,15 @@ if discriminant > 0 %If the discriminant is greater than 0, the the equation wil
     [x1,x2] = twoRoots(a,b,discriminant); % I call the function that handles two roots and 
 %     pass the values for a, b and the discriminant to it. I don't need to
 %     pass c since it was already used in the calculation for the
-%     discriminant
+%     discriminant. The function outputs the roots as a matrix, so I define
+%     a matrix to store the outputs.
 
-    plot(x1,0, 'p');
-    plot(x2,0, 'p');
+    plot(x1,0, 'pr'); %With the roots calculated, I then plot them on the graph. 
+    plot(x2,0, 'pr'); %I use 'p' as a constructor to tell the function to plot these points as red stars
     fprintf('x1 = %.3f, x2 = %.3f \n', x1, x2); % I then print out 
 %     the values for the roots
 elseif discriminant == 0 % If the discriminant equals 0, then there will be one root.
-    disp(oneRoot(a,b)); % I only need to pass a and b since the discriminant is 0
+   disp(oneRoot(a,b)); % I only need to pass a and b since the discriminant is 0
 else
     disp('Equation will have no x axis intersects'); % I let the user know that there will be no interesect on the graph
     [xi1, xi2] = twoRoots(a,b,discriminant); % I use the same function in the first case since there will still be 2 roots,
@@ -133,5 +142,9 @@ x2 = (-b - sqrt(d))/(2*a);
 end
 
 function x = oneRoot(a,b)
-x = -b/2*a;
+x = -b/2*a; % Since the discriminant will equal zero, then the equation will have
+% just one root, the two equations defined by the quadrataic formula will
+% have the same value so I do not need to pass the discriminant into the
+% equation.
+plot(x,0,'h');
 end
