@@ -13,7 +13,7 @@ clear; %This command clears any previously initialised variables from memory
 %  overflow.
 close all; % This command closes all figures that have graphs on them.
 
-% TO DO: 
+% TO DO:
 % Make it so intersection points are displayed
 % IF TIME ALLOWS:
 % Upgrade it so it finds the intersection between a quadratic and a line
@@ -23,50 +23,19 @@ close all; % This command closes all figures that have graphs on them.
 % of asking for a b and c separately
 % DEADLINE: NOVEMBER 7TH
 %
-
-disp('Please enter a, b, and c for a quadratic from the form ax^2 + bx + c, as well as the bounds for the graph');
-%This command prints to the command window only. I do this to prompt the
-%user for input.
-
-
-at = 0; % This variable is the condition variable for the while loop below.
-while at == 0 %The while loop is set to repeat until a condition is met. In this case I set it to a value of the condition variable above
-    a = input('a: ', 's'); %the input() function defaults to a number input and as such has its own error checking
-    %     I intend to bypass this by having the program print out a more
-    %     user-friendly message to the user. To do this, I must first take the
-    %     input as a string rather than a number.
-    if isnan(str2double(a)) % I then convert the string to a double. If the variable is anything but a number, this function returns NaN
-        % NaN thankfully has a function that can check for it and return a status
-        % value which I can use in an if statement.
-        disp('Invalid input, expected a number'); % This is the message to prompt the user to enter a numeric input.
-        % The if statement skips the else part and the loop starts again
-    else
-        at = 1; % if the input is numeric, then the condition variable is set to break the loop and continue
-        a = str2double(a); % I then convert the string input to a double and store it. I use str2double to include fractions
-    end
-end
-% I then do the same for the other variables.
-bt = 0;
-while bt == 0
-    b = input('b: ', 's');
-    if isnan(str2double(b))
+a = [0 0 0 0 0 0 0 0 0 0];
+b = [0 0 0 0 0 0 0 0 0 0];
+c = [0 0 0 0 0 0 0 0 0 0];
+dt = 0;
+while dt == 0
+    d = input('How many equations do you want to plot? (Max 10) ', 's');
+    if isnan(str2double(d))
         disp('Invalid input, expected a number');
     else
-        bt = 1;
-        b = str2double(b);
+        dt = 1;
+        d = str2double(d);
     end
 end
-ct = 0;
-while ct == 0
-    c = input('c: ', 's');
-    if isnan(str2double(c))
-        disp('Invalid input, expected a number');
-    else
-        ct = 1;
-        c = str2double(c);
-    end
-end
-
 lt = 0;
 while lt == 0
     L = input('Lower Bound of graph (default -5): ', 's');
@@ -90,55 +59,111 @@ while rt == 0
         R = str2double(R);
     end
 end
-fprintf('You have entered %d, %d, and %d \n', a,b,c);
-
+for i = 1:d
+    fprintf('Please enter a, b, and c for quadratic %.0f \n', i);
+    %This command prints to the command window only. I do this to prompt the
+    %user for input. I type %.0f to tell MATLAB I want the value i to be
+    %substituted there. The .0 tells MATLAB the precision of the number in
+    %decimal places. Since it will be an integer, I do not want any
+    %decimalplaces, hence the .0. I also use put a \n in there to indicate
+    %a new line.
+    
+    
+    at = 0; % This variable is the condition variable for the while loop below.
+    while at == 0 %The while loop is set to repeat until a condition is met. In this case I set it to a value of the condition variable above
+        as = input('a: ', 's'); %the input() function defaults to a number input and as such has its own error checking
+        %     I intend to bypass this by having the program print out a more
+        %     user-friendly message to the user. To do this, I must first take the
+        %     input as a string rather than a number.
+        if isnan(str2double(as)) % I then convert the string to a double. If the variable is anything but a number, this function returns NaN
+            % NaN thankfully has a function that can check for it and return a status
+            % value which I can use in an if statement.
+            disp('Invalid input, expected a number'); % This is the message to prompt the user to enter a numeric input.
+            % The if statement skips the else part and the loop starts again
+        else
+            at = 1; % if the input is numeric, then the condition variable is set to break the loop and continue
+            a(i) = str2double(as); % I then convert the string input to a double and store it. I use str2double to include fractions
+        end
+    end
+    % I then do the same for the other variables.
+    bt = 0;
+    while bt == 0
+        bs = input('b: ', 's');
+        if isnan(str2double(bs))
+            disp('Invalid input, expected a number');
+        else
+            bt = 1;
+            b(i) = str2double(bs);
+        end
+    end
+    ct = 0;
+    while ct == 0
+        cs = input('c: ', 's');
+        if isnan(str2double(cs))
+            disp('Invalid input, expected a number');
+        else
+            ct = 1;
+            c(i) = str2double(cs);
+        end
+    end
+    
+    fprintf('You have entered %d, %d, and %d \n', a(i),b(i),c(i));
+end
 hold on; % This command tells matlab not to overwrite the previous graph when I plot a new one
 % (for some reason matlab counts plotting individual points as separate
 % graphs worth clearing the graph for
 grid on; % This makes the grid visible on the graph.
 
-title(sprintf('Graph of %.0fx^2+%.0fx+%.0f',a,b,c)); 
-% This command 
+title(sprintf('Graph of %.0f equations',d));
+% This command sets the title for the graph. I use sprintf to allow me to
+% concatenate the values for a, b, and c into the title.
 
 x = L:0.01:R;
-y = a*x.^2 + b.*x + c;
+plot([L R],[0 0],'k-');
+plot([0 0], [-500 500], 'k-');
 
-plot(x,y,'-.');
-plot(x,0,'k');
-plot(0,y,'k');
+hold on;
+for i = 1:d
+    y = a(i)*x.^2 + b(i).*x + c(i);
+    axis([L R 10*L 10*R]);
+    plot(x,y,'-.');
+    % I then check the discriminant of the equation to check the number of
+    % roots the equation will have. This means that I can create a function for
+    % each case.
+    discriminant = b(i)^2 - 4 * a(i) * c(i); % Now that I have calculated this, I can use it in later calculations.
+    if discriminant > 0 %If the discriminant is greater than 0, the the equation will have two roots
+        [x1, x2] = twoRoots(a(i),b(i),discriminant); % I call the function that handles two roots and
+        %     pass the values for a, b and the discriminant to it. I don't need to
+        %     pass c since it was already used in the calculation for the
+        %     discriminant.
+        plot(x1,0, 'pr'); %With the roots calculated, I then plot them on the graph.
+plot(x2,0, 'pr'); %I use 'p' as a constructor to tell the function to plot these points as red stars
 
-% I then check the discriminant of the equation to check the number of
-% roots the equation will have. This means that I can create a function for
-% each case.
-discriminant = b^2 - 4 * a * c; % Now that I have calculated this, I can use it in later calculations.
-
-if discriminant > 0 %If the discriminant is greater than 0, the the equation will have two roots
-    [x1,x2] = twoRoots(a,b,discriminant); % I call the function that handles two roots and 
-%     pass the values for a, b and the discriminant to it. I don't need to
-%     pass c since it was already used in the calculation for the
-%     discriminant. The function outputs the roots as a matrix, so I define
-%     a matrix to store the outputs.
-
-    plot(x1,0, 'pr'); %With the roots calculated, I then plot them on the graph. 
-    plot(x2,0, 'pr'); %I use 'p' as a constructor to tell the function to plot these points as red stars
-    fprintf('x1 = %.3f, x2 = %.3f \n', x1, x2); % I then print out 
-%     the values for the roots
-elseif discriminant == 0 % If the discriminant equals 0, then there will be one root.
-   disp(oneRoot(a,b)); % I only need to pass a and b since the discriminant is 0
-else
-    disp('Equation will have no x axis intersects'); % I let the user know that there will be no interesect on the graph
-    [xi1, xi2] = twoRoots(a,b,discriminant); % I use the same function in the first case since there will still be 2 roots,
-%     however they will not be real roots, that is to say the function will
-%     return complex numbers rather than floats
-    fprintf('x1 = %.3f%+.3fi ,  x2 = %.3f+%.3fi \n',real(xi1),imag(xi1),real(xi2),imag(xi2));
-%     Since fprintf doesn't have a format for complex numbers, I need to
-%     split them into their real and imaginary parts and concatenate them
-%     separately
+        fprintf('x1 = %.3f, x2 = %.3f \n', x1, x2); % I then print out
+        %     the values for the roots
+    elseif discriminant == 0 % If the discriminant equals 0, then there will be one root.
+        disp(oneRoot(a(d),b(d))); % I only need to pass a and b since the discriminant is 0
+    else
+        disp('Equation will have no x axis intersects'); % I let the user know that there will be no interesect on the graph
+        [xi1, xi2] = twoRoots(a(i),b(i),discriminant); % I use the same function in the first case since there will still be 2 roots,
+        %     however they will not be real roots, that is to say the function will
+        %     return complex numbers rather than floats
+        fprintf('x1 = %.3f%+.3fi ,  x2 = %.3f-%.3fi \n',real(xi1),imag(xi1),real(xi2),imag(xi2));
+        %     Since fprintf doesn't have a format for complex numbers, I need to
+        %     split them into their real and imaginary parts and concatenate them
+        %     separately. The first root will have a positive imaginary
+        %     part while the second will have negative part. imag() only
+        %     returns the magnitude so I have to put the signs of each part
+        %     in manually.
+    end
 end
 
-function [x1, x2] = twoRoots(a,b,d)
-x1 = (-b + sqrt(d))/(2*a);
+function [x1, x2] = twoRoots(a,b,d) % This function executes the
+%     quadratic equation. It returns each root in a matrix, which is how
+%     MATLAB handles multiple inputs
+x1 = (-b + sqrt(d))/(2*a); % Since the quadtratic equation has a ± in it, I can split it into 2 equations.
 x2 = (-b - sqrt(d))/(2*a);
+
 end
 
 function x = oneRoot(a,b)
@@ -147,4 +172,5 @@ x = -b/2*a; % Since the discriminant will equal zero, then the equation will hav
 % have the same value so I do not need to pass the discriminant into the
 % equation.
 plot(x,0,'h');
+fprintf('x = %.3f', x);
 end
