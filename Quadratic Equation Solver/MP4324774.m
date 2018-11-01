@@ -26,14 +26,16 @@ close all; % This command closes all figures that have graphs on them.
 a = [0 0 0 0 0 0 0 0 0 0];
 b = [0 0 0 0 0 0 0 0 0 0];
 c = [0 0 0 0 0 0 0 0 0 0];
-dt = 0;
-while dt == 0
-    d = input('How many equations do you want to plot? (Max 10) ', 's');
-    if isnan(str2double(d))
+maxt = 0;
+while maxt == 0
+    max = input('How many equations do you want to plot? (Max 10) ', 's');
+    if isnan(str2double(max))
         disp('Invalid input, expected a number');
+    elseif str2double(max) >10
+        disp('Input out of range, maximum input is 10');
     else
-        dt = 1;
-        d = str2double(d);
+        maxt = 1;
+        max = str2double(max);
     end
 end
 lt = 0;
@@ -59,7 +61,7 @@ while rt == 0
         R = str2double(R);
     end
 end
-for i = 1:d
+for i = 1:max
     fprintf('Please enter a, b, and c for quadratic %.0f \n', i);
     %This command prints to the command window only. I do this to prompt the
     %user for input. I type %.0f to tell MATLAB I want the value i to be
@@ -114,19 +116,26 @@ hold on; % This command tells matlab not to overwrite the previous graph when I 
 % graphs worth clearing the graph for
 grid on; % This makes the grid visible on the graph.
 
-title(sprintf('Graph of %.0f equations',d));
+title(sprintf('Graph of %.0f equations',max));
 % This command sets the title for the graph. I use sprintf to allow me to
 % concatenate the values for a, b, and c into the title.
 
-x = L:0.01:R;
+
 plot([L R],[0 0],'k-');
 plot([0 0], [-500 500], 'k-');
+axis([L R 10*L 10*R]);
 
 hold on;
-for i = 1:d
-    y = a(i)*x.^2 + b(i).*x + c(i);
-    axis([L R 10*L 10*R]);
-    plot(x,y,'-.');
+for i = 1:max
+    x = L:0.01:R;
+    if ~(a(i) == 0)
+        y = a(i)*x.^2 + b(i)*x + c(i);
+        plot(x,y,'-.');
+    else
+        y = b(i).*x + c(i);
+        plot(x,y,'-.');
+    end
+    
     % I then check the discriminant of the equation to check the number of
     % roots the equation will have. This means that I can create a function for
     % each case.
@@ -136,19 +145,21 @@ for i = 1:d
         %     pass the values for a, b and the discriminant to it. I don't need to
         %     pass c since it was already used in the calculation for the
         %     discriminant.
-        plot(x1,0, 'pr'); %With the roots calculated, I then plot them on the graph.
-plot(x2,0, 'pr'); %I use 'p' as a constructor to tell the function to plot these points as red stars
-
-        fprintf('x1 = %.3f, x2 = %.3f \n', x1, x2); % I then print out
+        plot(x1,0, 'pg'); %With the roots calculated, I then plot them on the graph.
+        plot(x2,0, 'pg'); %I use 'p' as a constructor to tell the function to plot these points as green stars
+        
+        fprintf('Equation %.0f: x1 = %.3f, x2 = %.3f \n',i , x1, x2); % I then print out
         %     the values for the roots
     elseif discriminant == 0 % If the discriminant equals 0, then there will be one root.
-        disp(oneRoot(a(d),b(d))); % I only need to pass a and b since the discriminant is 0
+        x = oneRoot(a(i),b(i)); % I only need to pass a and b since the discriminant is 0
+        plot(x,0,'pr'); %This command tells MATLAB to plot a red star at the x intercept
+        fprintf('Equation %.0f: x = %.3f \n',i,x);
     else
-        disp('Equation will have no x axis intersects'); % I let the user know that there will be no interesect on the graph
+        fprintf('Equation %.0f will have no x axis intersects \n', i); % I let the user know that there will be no interesect on the graph
         [xi1, xi2] = twoRoots(a(i),b(i),discriminant); % I use the same function in the first case since there will still be 2 roots,
         %     however they will not be real roots, that is to say the function will
         %     return complex numbers rather than floats
-        fprintf('x1 = %.3f%+.3fi ,  x2 = %.3f-%.3fi \n',real(xi1),imag(xi1),real(xi2),imag(xi2));
+        fprintf('Equation %.0f: x1 = %.3f%+.3fi ,  x2 = %.3f-%.3fi \n',i,real(xi1),imag(xi1),real(xi2),imag(xi2));
         %     Since fprintf doesn't have a format for complex numbers, I need to
         %     split them into their real and imaginary parts and concatenate them
         %     separately. The first root will have a positive imaginary
@@ -163,14 +174,11 @@ function [x1, x2] = twoRoots(a,b,d) % This function executes the
 %     MATLAB handles multiple inputs
 x1 = (-b + sqrt(d))/(2*a); % Since the quadtratic equation has a ± in it, I can split it into 2 equations.
 x2 = (-b - sqrt(d))/(2*a);
-
 end
 
 function x = oneRoot(a,b)
-x = -b/2*a; % Since the discriminant will equal zero, then the equation will have
+x = (-b)/(2*a); % Since the discriminant will equal zero, then the equation will have
 % just one root, the two equations defined by the quadrataic formula will
 % have the same value so I do not need to pass the discriminant into the
 % equation.
-plot(x,0,'h');
-fprintf('x = %.3f', x);
 end
