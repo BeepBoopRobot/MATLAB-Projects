@@ -12,8 +12,6 @@ clear; %This command clears any previously initialised variables from memory
 %  matrix, the matrix would still be in memory and could cause a memory
 %  overflow.
 close all; % This command closes all figures that have graphs on them.
-hold on; % This command makes it so that everything plotted is persistent, meaning 
-% that when plot() is called more than once, it doesn't overwrite the previous plot
 
 % TO DO: 
 % Make it so intersection points are displayed
@@ -92,8 +90,11 @@ while rt == 0
         R = str2double(R);
     end
 end
-fprintf('You have entered %d, %d, and %d \n', a,b,c);
+fprintf('You have entered %d, %d, and %d \n', a,b,c); % I originally put this in as a debug thing
+% but I've left it in as it verfies the user's inputs.
 
+hold on; % This command makes it so that everything plotted is persistent, meaning 
+% that when plot() is called more than once, it doesn't overwrite the previous plot
 x = L:0.01:R;
 y = a*x.^2 + b.*x + c;
 
@@ -121,7 +122,7 @@ else
     [xi1, xi2] = twoRoots(a,b,discriminant); % I use the same function in the first case since there will still be 2 roots,
 %     however they will not be real roots, that is to say the function will
 %     return complex numbers rather than floats
-    fprintf('x1 = %.3f%+.3fi ,  x2 = %.3f+%.3fi \n',real(xi1),imag(xi1),real(xi2),imag(xi2));
+    fprintf('x1 = %.3f+%.3f ,  x2 = %.3f%.3f \n',real(xi1),imag(xi1),real(xi2),imag(xi2));
 %     Since fprintf doesn't have a format for complex numbers, I need to
 %     split them into their real and imaginary parts and concatenate them
 %     separately
@@ -134,4 +135,5 @@ end
 
 function x = oneRoot(a,b)
 x = -b/2*a;
+plot(x,0,'p');
 end
