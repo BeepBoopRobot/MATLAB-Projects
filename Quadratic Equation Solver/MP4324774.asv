@@ -146,9 +146,7 @@ end
             % The .- tells MATLAB to plot the graph as a dot-dash line. I do not
             % specify a colour, since, as mentioned before, matlab will assign a
             % different colour to each new graph, which is what I want to happen to
-            % distinguish the graphs. DisplayName tells MATLAB what to label the
-            % equation as in the legend, in this case I tell MATLAB to display the
-            % equation of each graph.
+            % distinguish the graphs. DisplayName tells MATLAB what to call the 
         
             %% Roots Calculations
             % Here is where we actually calculate the roots of each graph. I could have
