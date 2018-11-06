@@ -155,6 +155,12 @@ end
             % just done x = (-b + sqrt(b(i)^2+4*a(i)*c(i))/2(a(i)), but I chose to do
             % some extra processing to make the results nicer.
             
+            for j = 1:length(x)
+               if x(j) == 0
+                   plot(0,y(j),'p','HandleVisibility','off'); %In this loop I calculate the y intersect and plot it on the y axis.
+               end
+            end
+            
             d = b(i)^2 - 4 * a(i) * c(i);        % I first calculate the discriminant of each formula.
                                                                              %Since the discriminant defines how many roots each graph will have, based
                                                                              %on 3 conditions, I can use it to form an if statement.
