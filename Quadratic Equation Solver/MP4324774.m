@@ -87,7 +87,7 @@ end
                 at = 1;
                 a(i) = str2double(as); %When I reassign the string, I assign it to a position within the matrix, defined by i.
             end
-        end
+        end 
         % I do the same for b and c
         bt = 0;
         while bt == 0
