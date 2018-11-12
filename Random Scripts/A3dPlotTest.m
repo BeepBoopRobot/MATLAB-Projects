@@ -1,0 +1,12 @@
+clc;
+clear;
+close all;
+t =  0:0.1:50;
+a = cos(t);
+b = t.^2;
+c = sin(t);
+hold all;
+view(3);
+grid on;
+plot3(t,a,c,'rp');
+plot3(2,2,2,'h');
