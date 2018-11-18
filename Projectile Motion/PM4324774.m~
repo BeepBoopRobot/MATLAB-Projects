@@ -84,7 +84,7 @@ end
 %% Processing
 
 %% Displaying
-% Graph initialisation
-hold all;
+
+hold on;
 grid on;
 view(3);
