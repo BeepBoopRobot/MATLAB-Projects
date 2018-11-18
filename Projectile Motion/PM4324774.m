@@ -24,13 +24,14 @@ while exit == 0
     tt = 0;
     while tt == 0
         type = input(sprintf("Type of Vector %.0f, (c)onstant or (i)nitial: ",n),'s');
-        if(type == 'c' || type == 'i')
+        if(isscalar(type) & type == 'c' | type == 'i')
             tt = 1;
             inputs.types(n) = type;
         else
             disp('Invalid input, please enter i for an intial vector and c for a constant vector');
         end
     end
+    
     %Magnitude
     mt = 0;
     while mt == 0;
@@ -42,6 +43,7 @@ while exit == 0
             mt = 1;
         end
     end
+    
     %Bearing
     bt = 0;
     while bt == 0
@@ -64,6 +66,7 @@ while exit == 0
             at = 1;
         end
     end
+    
     %Done?
     yt = 0;
     while yt == 0
@@ -82,6 +85,38 @@ while exit == 0
 end
 
 %% Processing
+% Sorting
+initials = struct;
+constants = struct;
+in = 1;
+cn = 1;
+for i = 1:n
+    if inputs.types(i) == 'i'
+        initials(in).magnitude = inputs.magnitudes(i);
+        initials(in).bearing = inputs.bearings(i);
+        initials(in).angle = inputs.angles(i);
+        in = in + 1;
+    elseif inputs.types(i) == 'c'
+        constants(cn).magnitude = inputs.magnitudes(i);
+        constants(cn).bearing = inputs.bearings(i);
+        constants(cn).angle = inputs.angles(i);
+        cn = cn + 1;
+    end
+end
+
+i_Components = struct;
+c_Components = struct;
+for i = 0:n
+    %Initial Components
+    i_Components(i).x = initials(i).magnitude * cos(initials(i).bearing);
+    i_Components(i).y = initials(i).magnitude * sin(initials(i).bearing);
+    i_Components(i).z = initials(i).magnitude * sin(initials(i).angle);
+    %Constant Components
+    c_Components(i).x = initials(i).magnitude * cos(initials(i).bearing);
+    c_Components(i).y = initials(i).magnitude * sin(initials(i).bearing);
+    c_Components(i).z = initials(i).magnitude * sin(initials(i).angle);
+end
+
 
 %% Displaying
 % Graph initialisation
