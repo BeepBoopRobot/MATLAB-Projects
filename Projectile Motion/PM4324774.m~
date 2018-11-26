@@ -162,5 +162,4 @@ disp("Done!");
 hold all;
 grid on;
 view(3);
-axis([-5 10 -5 10 0 10]);
 plot3(S.x,S.y,S.z);
