@@ -10,12 +10,13 @@ disp("1. Plot the path of a ball given a set of initial velocities");
 disp("2. Calculate the horizontal displacement of a ball released from a height, given the height and initial speed");
 disp("3. Calculate the initial height of a ball and the initial speed given the time and displacement");
 disp("4. Calculcate the initial speed and angle of a ball given the time and displacement");
+
 exit = 0;
 while exit == 0
     ct = 0;
     while ct == 0
         c = input("Which case?: ", 's');
-        if (isnan(str2double(c))  && str2double(c) >= 4)
+        if (isnan(str2double(c))  || str2double(c) >= 4)
             disp("Invalid input, please input 1, 2, 3, or 4 depending on which case you want to calculate from above");
         else
             c = str2double(c);
@@ -200,13 +201,113 @@ function caseOne
 end
 
 function caseTwo
+    %% inputs
+    ht = 0;
+    while ht == 0
+        h = input("Please enter the launch height from the ground: ", 's');
+        if(isnan(str2double(h)) || str2double(h) < 0)
+            disp("Invalid input, please enter a number that is greater than 0.");
+        else
+            h = str2double(h);
+            ht = 1;
+        end
+    end
+    
+    at = 0;
+    while at == 0
+        a = input("Please enter the launch angle in degrees: ", 's');
+        if(isnan(str2double(a)) || str2double(a) > 180)
+            disp("Invalid input, please enter an angle that is less than 180 degrees");
+        else
+            a = str2double(a);
+            at = 1;
+        end
+    end
+    
+    ut = 0;
+    while ut == 0
+        us = input("Please enter the launch speed in metres per second: ", 's');
+        u =str2double(us);
+        if(isnan(u) || u < 0)
+            disp("Invalid input, please enter a positive value for speed: ", 's');
+        else
+            ut = 1;
+        end
+    end
+    
+    %% Processing
+    T_parabola = 2*(-u*sind(a))/-9.81;
+    u_down = u*sind(a) + -9.81 * T_parabola;
+    [t1, t2] = quadraticEquation(-4.905, u_down, h);
+    if t1 > 0
+        T_down = t1;
+    else
+        T_down = t2;
+    end
+    
+    T_max = T_parabola + T_down;
+    
+    t = 0:(T_max/1000):T_max;
+    
+    S_x = u*cosd(a)*t;
+    S_y = u*sind(a)*t + 0.5*-9.81*(t.^2);
+    max_x = max(S_x);
+    
+    y_max = max(S_y) + h;
+    x_max = u*cosd(a) * T_parabola / 2;
+    
+    
+    %% Displaying
+    hold on;
+    grid on;
+    
+    plot(S_x,S_y+h);
+    plot(x_max, y_max,'hr');
+    text(x_max, y_max + (y_max/10), sprintf("Max height: %.2fm",y_max));
+    quiver(0, 0, max_x,0,0);
+    quiver(0,h, u*cosd(a),u*sind(a));
+    text(max_x/2,-2,sprintf("Max distance: %.2fm", max_x));
+    bw = xlim;
+    bar(0,h,bw(2)/5);
     
 end
 
 function caseThree
+    %% Inputs
+    
+    tt = 0;
+    while tt == 0
+        ts = input("Please enter the time of flight in seconds: ", 's')'
+        t = str2double(ts);
+        if( isnan(t) || t<0)
+            disp("Invalid input, please enter a positive number for time");
+        else
+            tt = 1;
+        end
+    end
+    
+    ut = 0;
+    while ut == 0;
+        us = input("Please enter the initial speed in metres per second: ", 's');
+        u = str2double(us);
+        if isnan(u)
+            disp("Invalid input, please enter a number as the value for speed");
+        else
+            ut = 1;
+        end
+    end
+    
+    %% Processing
+    
+    %% Displaying
     
 end
 
 function caseFour
     
+end
+
+function [x1, x2] = quadraticEquation(a,b,c)
+    x1 = (-b + sqrt(b^2 - 4 * a * c))/(2*a);
+    x2 = (-b - sqrt(b^2 - 4 * a * c))/(2*a);
 end
