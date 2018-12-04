@@ -16,7 +16,7 @@ while exit == 0
     ct = 0;
     while ct == 0
         c = input("Which case?: ", 's');
-        if (isnan(str2double(c))  || str2double(c) > 4)
+        if (isnan(str2double(c))  || str2double(c) >= 4)
             disp("Invalid input, please input 1, 2, 3, or 4 depending on which case you want to calculate from above");
         else
             c = str2double(c);
@@ -349,44 +349,15 @@ function caseFour
     u_y = -(-9.81 * t)/2;
     
     u = sqrt(u_x^2 + u_y^2);
-    theta = atan(u_y/u_x);
+    theta = arctan(u_y/u_x);
     
-    S_x = 0:s/1000:s;
-    T = 0:t/1000:t;
+    S = 0:s/1000:s;
     
-    S_y = u_y .* T + 0.5 * -9.81 .* T.^2;
-    S_max = max(S_y);
     %% Displaying
-    hold on;
-    grid on;
-	daspect([1 1 1]);
-    pbaspect([1 1 1]);
     
-    
-    plot(S_x, S_y);
-    plot(s/2, S_max, 'p');
-    text(s/2, S_max + (S_max / 10), sprintf("Max height: %.2fm", S_max));
-    
-    q1 = quiver(0,0,u_x*2,u_y*2,0);
-    q1.MaxHeadSize = 0.1;
-    text(u_x * 2, u_y * 2, sprintf("Initial speed: %.2fm/s", u));
-    ang([0 0],u/2, [0 theta], 'k');
-    text(u_x/2, u_y/2, sprintf("Launch angle: %.2f degrees", rad2deg(theta)));
-    axis manual;
-    plot([-500,500],[0 0],'k-');
 end
 
 function [x1, x2] = quadraticEquation(a,b,c)
     x1 = (-b + sqrt(b^2 - 4 * a * c))/(2*a);
     x2 = (-b - sqrt(b^2 - 4 * a * c))/(2*a);
-end
-
-function h = ang(centre,radius,span,style)
-% Husam Aldahiyat, October, 2008.
-theta = linspace(span(1),span(2),100);
-rho = ones(1,100) * radius;
-[x,y] = pol2cart(theta,rho);
-x = x + centre(1);
-y = y + centre(2);
-h = plot(x,y,style);
 end
