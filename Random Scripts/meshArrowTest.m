@@ -1,0 +1,14 @@
+clc;
+clear;
+close all;
+hold on;
+grid on;
+view(3);
+x = 0:0.5:10;
+y = 0:0.5:10;
+z = x.^2 + y.^2;
+a = 1;
+b =1;
+c = 1;
+quiver3(x,y,z,x,x,x);
+plot3(x,y,z);
